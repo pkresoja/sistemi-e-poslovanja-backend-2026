@@ -61,4 +61,71 @@ export class TimeTableService {
             timeTables: data
         }
     }
+
+    static async getById(id: number) {
+        const data = await repo.findOne({
+            select: {
+                timeTableId: true,
+                movieId: true,
+                cinemaId: true,
+                startTime: true,
+                price: true
+            },
+            where: {
+                timeTableId: id,
+                deletedAt: IsNull(),
+                cinema: {
+                    deletedAt: IsNull()
+                }
+            }
+        })
+
+        if (data == null)
+            throw new Error('NOT_FOUND')
+
+        return data
+    }
+
+    static async update(id: number, obj: TimeTable) {
+        const data = await repo.findOneByOrFail({
+            timeTableId: id,
+            deletedAt: IsNull(),
+            cinema: {
+                deletedAt: IsNull()
+            }
+        })
+
+        data.movieId = obj.movieId
+        data.cinemaId = obj.cinemaId
+        data.startTime = obj.startTime
+        data.price = obj.price
+        data.updatedAt = new Date()
+
+        await repo.save(data)
+    }
+
+    static async create(obj: TimeTable) {
+        const data = new TimeTable()
+
+        data.movieId = obj.movieId
+        data.cinemaId = obj.cinemaId
+        data.startTime = obj.startTime
+        data.price = obj.price
+        data.createdAt = new Date()
+
+        await repo.save(data)
+    }
+
+    static async deleteById(id: number) {
+        const data = await repo.findOneByOrFail({
+            timeTableId: id,
+            deletedAt: IsNull(),
+            cinema: {
+                deletedAt: IsNull()
+            }
+        })
+
+        data.deletedAt = new Date()
+        await repo.save(data)
+    }
 }

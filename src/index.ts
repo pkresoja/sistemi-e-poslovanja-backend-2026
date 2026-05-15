@@ -5,6 +5,8 @@ import { AppDataSource } from './db'
 import { MovieRoute } from './routes/movie.route'
 import { CinemaRoute } from './routes/cinema.route'
 import { TimeTableRoute } from './routes/time.route'
+import { configDotenv } from 'dotenv'
+import { UserRoute } from './routes/user.route'
 
 const app = express()
 app.use(express.json())
@@ -14,10 +16,13 @@ app.use(morgan('combined'))
 app.use('/api/movie', MovieRoute)
 app.use('/api/cinema', CinemaRoute)
 app.use('/api/time-table', TimeTableRoute)
+app.use('/api/user', UserRoute)
 
+configDotenv()
+const port = Number(process.env.SERVER_PORT)
 AppDataSource.initialize().then(() => {
     console.log('Connected to database')
-    app.listen(3300, () => {
-        console.log('Application started')
+    app.listen(port, () => {
+        console.log(`Application started on port ${port}`)
     })
 })

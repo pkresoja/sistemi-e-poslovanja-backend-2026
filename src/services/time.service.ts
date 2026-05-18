@@ -23,8 +23,8 @@ export class TimeTableService {
         const arr = data.map(obj => obj.movieId)
         const unique = [... new Set(arr)]
         const movies = await MovieService.getMoviesByIds(unique)
-
-        return movies.data
+        const sorted = movies.data.sort((a: any, b: any) => b.movieId - a.movieId)
+        return sorted
     }
 
     static async getMovieDetails(id: number) {

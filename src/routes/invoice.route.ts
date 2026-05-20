@@ -18,3 +18,27 @@ InvoiceRoute.put('/cart/add/:id', async (req: any, res) => {
         return await InvoiceService.addItemToCart(timeTableId, email)
     })
 })
+
+InvoiceRoute.put('/cart/:id/count/:count', async (req: any, res) => {
+    await defineRequest(res, async () => {
+        const email = req.user.email
+        const invoiceItemId = Number(req.params.id)
+        const count = Number(req.params.count)
+        return await InvoiceService.changeCartItemCount(invoiceItemId, email, count)
+    })
+})
+
+InvoiceRoute.put('/pay', async (req: any, res) => {
+    await defineRequest(res, async () => {
+        const email = req.user.email
+        return await InvoiceService.payInvoice(email)
+    })
+})
+
+InvoiceRoute.delete('/cart/:id', async (req: any, res) => {
+    await defineRequest(res, async () => {
+        const email = req.user.email
+        const invoiceItemId = Number(req.params.id)
+        return await InvoiceService.removeCartItem(invoiceItemId, email)
+    })
+})

@@ -1,21 +1,50 @@
 import { IsNull } from "typeorm";
 import { AppDataSource } from "../db";
 import { Cinema } from "../entities/Cinema";
+import { MovieService } from "./movie.service";
 
 const repo = AppDataSource.getRepository(Cinema)
 
 export class CinemaService {
     static async getAll() {
-        return await repo.find({
+        const cinemas = await repo.find({
             select: {
                 cinemaId: true,
                 name: true,
-                address: true
+                address: true,
+                timeTables: {
+                    timeTableId: true,
+                    movieId: true,
+                    price: true,
+                    startTime: true
+                }
             },
             where: {
-                deletedAt: IsNull()
+                deletedAt: IsNull(),
+                timeTables: {
+                    deletedAt: IsNull()
+                }
+            },
+            relations: {
+                timeTables: true
             }
         })
+
+        const ids = []
+        for (let cinema of cinemas) {
+            for (let timeTable of cinema.timeTables) {
+                ids.push(timeTable.movieId)
+            }
+        }
+
+        const movies = await MovieService.getMoviesByIds(ids)
+        for (let cinema of cinemas) {
+            for (let timeTable of cinema.timeTables) {
+                timeTable.movie = movies.data.find(movie => movie.movieId == timeTable.movieId)
+            }
+        }
+
+        return cinemas
     }
 
     private static async getById(id: number) {

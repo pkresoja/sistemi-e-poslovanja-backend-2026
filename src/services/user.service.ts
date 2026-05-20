@@ -125,4 +125,41 @@ export class UserService {
 
         return user
     }
+
+    static async getUserProfile(email: string) {
+        return await repo.findOneOrFail({
+            select: {
+                userId: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+                gender: true,
+                invoices: {
+                    invoiceId: true,
+                    pursId: true,
+                    pursTime: true,
+                    invoiceItems: {
+                        invoiceItemId: true,
+                        pricePerItem: true,
+                        count: true
+                    }
+                }
+            },
+            where: {
+                email,
+                deletedAt: IsNull(),
+                invoices: {
+                    pursId: Not(IsNull()),
+                    invoiceItems: {
+                        deletedAt: IsNull()
+                    }
+                }
+            },
+            relations: {
+                invoices: {
+                    invoiceItems: true
+                }
+            }
+        })
+    }
 }

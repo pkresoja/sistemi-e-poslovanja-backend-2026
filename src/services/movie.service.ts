@@ -1,4 +1,5 @@
 import axios from "axios";
+import type { MovieModel } from "../models/movie.model";
 
 const client = axios.create({
     baseURL: 'https://movie.pequla.com/api',
@@ -13,11 +14,11 @@ const client = axios.create({
 
 export class MovieService {
     static async getMovies() {
-        return await client.get('/movie')
+        return await client.get<MovieModel[]>('/movie')
     }
 
     static async getMoviesByIds(ids: number[]) {
-        return await client.request({
+        return await client.request<MovieModel[]>({
             url: '/movie/list',
             method: 'POST',
             data: ids
@@ -25,7 +26,7 @@ export class MovieService {
     }
 
     static async getMovieById(id: number) {
-        return await client.request({
+        return await client.request<MovieModel>({
             url: `/movie/${id}`,
             method: 'GET'
         })

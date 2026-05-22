@@ -77,8 +77,7 @@ export class UserService {
             '/api/user/login',
             '/api/user/refresh',
             '/api/user/signup',
-            '/api/user/verify',
-            '/api/movie'
+            '/api/user/verify'
         ]
 
         if (whitelisted.find(w => req.path.startsWith(w))) {

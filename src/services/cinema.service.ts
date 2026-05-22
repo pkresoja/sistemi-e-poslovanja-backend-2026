@@ -7,6 +7,19 @@ const repo = AppDataSource.getRepository(Cinema)
 
 export class CinemaService {
     static async getAll() {
+        return await repo.find({
+            select: {
+                cinemaId: true,
+                name: true,
+                address: true
+            },
+            where: {
+                deletedAt: IsNull(),
+            }
+        })
+    }
+
+    static async getAllWithTimeTables() {
         const cinemas = await repo.find({
             select: {
                 cinemaId: true,
@@ -23,6 +36,11 @@ export class CinemaService {
                 deletedAt: IsNull(),
                 timeTables: {
                     deletedAt: IsNull()
+                }
+            },
+            order: {
+                timeTables: {
+                    startTime: 'ASC'
                 }
             },
             relations: {

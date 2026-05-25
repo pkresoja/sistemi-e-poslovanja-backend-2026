@@ -1,15 +1,14 @@
-# psep-backend
+# PSEP 2026 - Backend
 
-To install dependencies:
-
-```bash
-bun install
+Primer .env fajla:
 ```
-
-To run:
-
-```bash
-bun run index.ts
+SERVER_PORT=3300
+DB_HOST=localhost
+DB_PORT=3309
+DB_USER=root
+DB_PASS=root
+DB_NAME=psep_2026
+GMAIL_USER=Your-Gmail-Address
+GMAIL_PASS=Your-Gmail-App-Password
+JWT_SECRET=Your-JWT-Secert
 ```
-
-This project was created using `bun init` in bun v1.3.9. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
